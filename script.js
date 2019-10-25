@@ -52,7 +52,7 @@ console.log(values);
 // [2, 1, 5, 0, 3, 4, 7, 2, 3, 1, 8] // 24
 // [2, 2, 2, 2, 2] // 0
 
-let land = [2,1,5,0,3,4,7,2,3,1,0];
+let land = [2, 1, 5, 0, 3, 4, 7, 2, 3, 1, 0];
 
 function maxWater (arr) {
     let leftMax = 0,
@@ -61,24 +61,25 @@ function maxWater (arr) {
         right = land.length - 1,
         volume = 0;
 
-        while(left < right) {
-            if (arr[left] > leftMax) {
-                leftMax = land[left];
-            }
-            if (land[right] > rightMax) {
-                rightMax = land[right];
-            }
-            if(leftMax >= rightMax) {
-                volume += rightMax - land[right];
-                right--;
-            } else {
-                volume += leftMax - land[left];
-                left++;
-            }
+    while (left < right) {
+        if (arr[left] > leftMax) {
+            leftMax = land[left];
         }
-        console.log(volume);
-        return volume;
+        if (land[right] > rightMax) {
+            rightMax = land[right];
+        }
+        if (leftMax >= rightMax) {
+            volume += rightMax - land[right];
+            right--;
+        } else {
+            volume += leftMax - land[left];
+            left++;
+        }
+    }
+    console.log('Кількість води = ' + volume);
+    return volume;
 }
+
 maxWater(land);
 
 //3) Задание состоит в том, чтобы рассчитать сдачу.
@@ -88,7 +89,7 @@ maxWater(land);
 // И у вас должен быть по сути определенный стек купюр, которыми вы располагаете.
 // Например, [1, 2, 5, 10, 20, 50, 100], статический.
 // И уже в зависимости от вашего стека вам нужно просчитать возможные варианты сдачи.
-let banknotes = [1, 2, 5, 10, 20, 50, 100];
+let banknotes = [1, 2, 5, 10, 20, 50, 100, 200, 500];
 
 function calculation (banknote, price) {
     let param = banknotes.indexOf(banknote);
@@ -98,27 +99,24 @@ function calculation (banknote, price) {
             reversed = includes.reverse(),
             length = includes.length,
             remainder = banknote - price;
-
         console.log('Решта: ' + remainder);
+        console.log('Купюри для решти:');
 
         for (let i = 0; i < length; i++) {
-            let remainder = banknote - price,
-                item = includes[i],
+            let item = includes[i],
                 count = remainder % item;
 
-            if (count === 1) {
-                let numberBills = remainder / item;
-                console.log('купюра ' + item + ' кількість ' + numberBills);
-                //return remainder;
-                item++;
+            if (count !== 1) {
+                let numberBills = (remainder - count) / item;
+                remainder = count;
+                if (numberBills !== 0) {
+                    console.log(numberBills + ' Х ' + item);
+                }
             } else {
-                let numberBills = (remainder - count) / item,
-                    newRemainder = remainder - remainder / item;
-                console.log('купюра ' + item);
-                console.log('кількість ' + numberBills);
-                console.log('Вам потрбно ' + numberBills + ' купюр номіналом ' + item);
-                console.log('----');
-                //return remainder = newRemainder;
+                let numberBills = remainder / item;
+                if (numberBills !== 0) {
+                    console.log(numberBills + ' Х ' + item);
+                }
             }
         }
         return remainder;
@@ -127,7 +125,7 @@ function calculation (banknote, price) {
     }
 }
 
-calculation(50, 20);
+calculation(200, 70);
 
 //4) На екране у вас есть шарик. Вам нужно с помощью js и html
 // создать какое-то действие с ним. Например, шарик залетает в
@@ -137,22 +135,46 @@ calculation(50, 20);
 // function move () {
 //     let ball = document.getElementById('ball'),
 //         box = document.getElementById('box'),
-//         r = ball.offsetWidth,
-//         maxWidth = box.offsetWidth,
-//         maxHeight = box.offsetHeight - r,
+//         ballWidth = ball.offsetWidth,
+//         maxHeight = box.offsetHeight - ballWidth,
 //         pos = 0,
-//         y = 0,
 //         id = setInterval(frame, 10);
 //
 //     function frame () {
-//         if (y > maxHeight) {
-//             ball.style.top = y - 3 + 'px';
+//         if (pos >= maxHeight) {
+//             clearInterval(id);
 //         }
-//         y++;
-//         ball.style.top = y + 3 +'px';
-//         //ball.style.left = pos + 3 + 'px';
-//         console.log(y);
-//
+//         pos++;
+//         ball.style.top = pos + 'px';
+//         ball.style.left = pos + 'px';
 //     }
 // }
-// move();
+
+let start = performance.now(),
+    element = document.getElementById('ball');
+
+function step1 (timestamp,) {
+    let progress = timestamp - start,
+        firstValue = Math.min(progress / 10, 250);
+    element.style.top = firstValue + 'px';
+    element.style.left = firstValue + 'px';
+
+    if (progress < 2500) {
+        window.requestAnimationFrame(step1);
+    }
+}
+
+function step2 (timestamp) {
+    let progress = timestamp - start,
+        firstValue = Math.min(progress / 10, 450);
+    element.style.left = firstValue + 'px';
+
+    if (progress < 5000) {
+        window.requestAnimationFrame(step2);
+    }
+}
+
+window.requestAnimationFrame(step1);
+setTimeout(function () {
+    window.requestAnimationFrame(step2);
+}, 2500);

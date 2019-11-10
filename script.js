@@ -16,9 +16,6 @@ arr.forEach(function (item) {
     if (item > max) {
         max = item;
     }
-});
-
-arr.forEach(function (item) {
     if (item < min) {
         min = item;
     }
@@ -76,7 +73,7 @@ function maxWater (arr) {
             left++;
         }
     }
-    console.log('Кількість води = ' + volume);
+    console.log('The amount of water = ' + volume);
     return volume;
 }
 
@@ -95,37 +92,41 @@ function calculation (banknote, price) {
     let param = banknotes.indexOf(banknote);
 
     if (param !== -1) {
-        let includes = banknotes.slice(0, param),
-            reversed = includes.reverse(),
-            length = includes.length,
-            remainder = banknote - price;
-        console.log('Решта: ' + remainder);
-        console.log('Купюри для решти:');
+        if( banknote > price) {
+            let includes = banknotes.slice(0, param),
+                reversed = includes.reverse(),
+                length = includes.length,
+                remainder = banknote - price;
+            console.log('Your rest: ' + remainder);
+            console.log('Bills for the rest:');
 
-        for (let i = 0; i < length; i++) {
-            let item = includes[i],
-                count = remainder % item;
+            for (let i = 0; i < length; i++) {
+                let item = includes[i],
+                    count = remainder % item;
 
-            if (count !== 1) {
-                let numberBills = (remainder - count) / item;
-                remainder = count;
-                if (numberBills !== 0) {
-                    console.log(numberBills + ' Х ' + item);
-                }
-            } else {
-                let numberBills = remainder / item;
-                if (numberBills !== 0) {
-                    console.log(numberBills + ' Х ' + item);
+                if (count !== 1) {
+                    let numberBills = (remainder - count) / item;
+                    remainder = count;
+                    if (numberBills !== 0) {
+                        console.log(numberBills + ' Х ' + item);
+                    }
+                } else {
+                    let numberBills = remainder / item;
+                    if (numberBills !== 0) {
+                        console.log(numberBills + ' Х ' + item);
+                    }
                 }
             }
+            return remainder;
+        } else {
+            console.log('Price cannot be higher than banknote.')
         }
-        return remainder;
     } else {
-        console.log('Банкноти, які ви можете ввести: ' + banknotes.join() + '.');
+        console.log('Banknotes you can enter: ' + banknotes.join() + '.');
     }
 }
 
-calculation(200, 70);
+calculation(500, 170);
 
 //4) На екране у вас есть шарик. Вам нужно с помощью js и html
 // создать какое-то действие с ним. Например, шарик залетает в
@@ -153,7 +154,7 @@ calculation(200, 70);
 let start = performance.now(),
     element = document.getElementById('ball');
 
-function step1 (timestamp,) {
+function step1 (timestamp) {
     let progress = timestamp - start,
         firstValue = Math.min(progress / 10, 250);
     element.style.top = firstValue + 'px';
